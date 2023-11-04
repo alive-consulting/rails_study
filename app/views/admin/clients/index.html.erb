@@ -1,61 +1,48 @@
-<%= turbo_frame_tag 'main_pane' do %>
-  <!-- タイトル + 列表示非表示ボタン -->
-  <div class='h3_title'>
-    <h3><%= t('clients.index.title') %></h3>
-    <!-- 列の表示・非表示切り替えダイアログボタン -->
-    <%= index_dialog_button %>
-    <%= render 'shared/index_dialogs' %>
-  </div>
-  <!-- 一覧画面 -->
-  <%= turbo_frame_tag 'clients_list' do %>
-    <div class='form-group'>
-      <!-- 新規登録ボタン -->
-      <%= new_button(new_admin_client_path) %>
-      <!-- 件数 -->
-      <%= search_form_for [:admin ,@q], html: {class: 'form-horizontal'} do |f| %>
-        <span class='count_details total'><b><%= link_to t('count_details.total')+number_with_delimiter(@total_count),
-            '?reset=true', data: {controller: 'index', action: 'click->index#reset'} %></b>
-        </span>
+<!-- タイトル + 列表示非表示ボタン -->
+<div class='h3_title'>
+  <h3><%= t('clients.index.title') %></h3>
+</div>
+<!-- 一覧画面 -->
+<div class='form-group'>
+  <!-- 新規登録ボタン -->
+  <%= 
+    link_to(new_admin_client_path, class: 'btn btn-outline-primary btn-new') do
+      icon_tag(:plus) + t('button.new')
+    end
+  %>
+</div>
+<div class='fixed_header_table' data-controller='index'>
+  <table id='table'>
+    <!-- 列見出し -->
+    <thead>
+      <tr>
+        <th><%= Client.human_attribute_name(:name) %></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- データ表示部 + 対象カラム一覧 + 編集・削除ボタン -->
+      <% @clients.each do |client| %>
+        <!-- 削除用のdomid設定 -->
+        <tr>
+          <!-- 顧客名 -->
+          <td>
+            <%= client.name %>
+          </td>
+          <td>
+            <%#= link_to t('users.index.title'), users_admin_client_path(client.id), data: {turbo_frame: 'main_pane'} %>
+          </td>
+          <td>
+            <div style='display:flex'>
+              <!-- 編集ボタン -->
+                <%= link_to('編集', edit_admin_client_path(client)) %>
+                <%#= link_to('削除', admin_client_path(client.id),  data: { turbo_method: :delete }) %>
+            </div>
+          </td>
+        </tr>
       <% end %>
-      <!-- ページ送り -->
-      <div class='top-pagination'><%= paginate(@clients) %></div>
-    </div>
-    <div class='fixed_header_table' data-controller='index'>
-      <table id='table'>
-        <!-- 列見出し -->
-        <thead>
-          <tr>
-            <th><%= sort_link(@q, :name, Client.human_attribute_name(:name)) %></th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- データ表示部 + 対象カラム一覧 + 編集・削除ボタン -->
-          <% @clients.each do |client| %>
-            <!-- 削除用のdomid設定 -->
-            <tr id=<%="#{dom_id(client)}"%>>
-              <!-- 顧客名 -->
-              <td>
-                <%= client.name %>
-              </td>
-              <td>
-                <%= link_to t('users.index.title'), users_admin_client_path(client.id), data: {turbo_frame: 'main_pane'} %>
-              </td>
-              <td>
-                <div style='display:flex'>
-                  <!-- 編集ボタン -->
-                  <%= edit_button(edit_admin_client_path(client)) %>
-                  <!-- 削除ボタン -->
-                  <%= delete_dialog_button(client.id) %>
-                </div>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-    <!-- 削除ダイアログ -->
-    <%= render 'shared/delete_dialogs', {models: @clients} %>
-  <% end %>
-<% end %>
+    </tbody>
+  </table>
+</div>
+

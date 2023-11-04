@@ -1,7 +1,4 @@
-<%= render 'shared/form', {
-      model: [:service , @article],
-      back_path: service_articles_path
-    } do |f| %>
+<%= form_with model: [:service , @article], class: 'form-horizontal' do |f| %>
   <!-- タイトル -->
   <div class='form-group'>
     <%= f.label :title, Article.human_attribute_name('title'), class: 'col-md-2 control-label' %>
@@ -66,4 +63,15 @@
       </div>
     </div>
   </div>
+
+  <div class='form-group'>
+    <div class='col-md-3'>
+      <!-- 登録・更新ボタン -->
+      <%= submit_tag('更新') %>
+      <%#= button_to "削除", @user, method: :delete %>        
+      <!-- 戻るボタン -->
+      <%= link_to('戻る', service_articles_path ) %>
+    </div>
+  </div>
+
 <% end %>

@@ -15,7 +15,7 @@ class Article < ApplicationRecord
 
   # バリデーション
   validates :title, presence: true, length: { maximum: 100 }
-  validates :publish_date, date: true, allow_nil: true, allow_blank: true
+#  validates :publish_date, date: true, allow_nil: true, allow_blank: true
   validates :content, presence: true, length: { maximum: 65535 } 
 
   # TODO:検索ソートに組み入れない項目は下記の配列から除外すること

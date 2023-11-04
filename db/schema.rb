@@ -11,6 +11,20 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.1].define(version: 2001) do
+  create_table "articles", charset: "utf8mb4", comment: "記事", force: :cascade do |t|
+    t.string "title", limit: 100, null: false, comment: "タイトル"
+    t.date "publish_date", comment: "公開日"
+    t.text "content", null: false, comment: "内容"
+    t.boolean "is_delete", comment: "削除"
+    t.boolean "is_confirmed", comment: "確認"
+    t.integer "user_id", comment: "ユーザーID"
+    t.integer "create_id", comment: "作成者"
+    t.integer "update_id", comment: "更新者"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_articles_on_user_id"
+  end
+
   create_table "check_receives", charset: "utf8mb4", comment: "サンプル受信API", force: :cascade do |t|
     t.string "amount", limit: 15, comment: "取引金額"
     t.string "seq_no", limit: 6, comment: "取引通番"

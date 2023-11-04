@@ -14,24 +14,16 @@ class Service::ArticlesController < ApplicationController
 
   # indexアクション
   def index
-    @q        = Article.ransack(search_params)
-    @articles = @q.result(distinct: true).page(params[:page]).per(params[:per])
-                  .includes(%i(user))
+    @articles = Article.all
     @articles = @articles.where(user_id: params[:user_id]) if params[:user_id].present?
-
     # 件数
     @total_count   = Article.all.count
-    @unconfirmed_count = Article.where.not(is_confirmed: true).all.count
-    respond_to do |f|
-      f.html
-      f.json { render json: @articles }
-    end
   end
 
   # newアクション
   def new
     @article = Article.new
-    render action: :form
+    render action: :form    
   end
 
   # editアクション
@@ -42,29 +34,19 @@ class Service::ArticlesController < ApplicationController
   # createアクション
   def create
     @article = Article.new(article_params)
-    set_user_id @article   # セッションからuser_id設定
-    respond_to do |f|
-      if @article.save
-        f.html { redirect_to action: :index }
-        f.json { render json: @article }
-      else
-        f.html { render action: :form, status: :unprocessable_entity }
-        f.json { render json: @article.errors, status: :unprocessable_entity }
-      end
+    if @article.save
+      redirect_to action: :index
+    else
+      render action: :form
     end
   end
 
   # updateアクション
   def update
-    set_user_id @article   # セッションからuser_id設定
-    respond_to do |f|
-      if @article.update(article_params)
-        f.html { redirect_to action: :index }
-        f.json { render json: @article }
-      else
-        f.html { render action: :form, status: :unprocessable_entity }
-        f.json { render json: @article.errors, status: :unprocessable_entity }
-      end
+    if @article.update(article_params)
+      redirect_to action: :index
+    else
+      render action: :form
     end
   end
 
@@ -72,15 +54,7 @@ class Service::ArticlesController < ApplicationController
   # TODO: 削除処理について要確認
   def destroy
     ActiveRecord::Base.transaction do
-      respond_to do |f|
-        if @article.destroy
-          f.turbo_stream
-          f.json { render json: @article }
-        else
-          f.turbo_stream
-          f.json { render json: @article.errors, status: :unprocessable_entity }
-        end
-      end
+      redirect_to action: :index if @article.destroy
     end
   end
 
