@@ -1,24 +1,8 @@
-# README
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+1. git clone <br>
+2. cd rails_study<br>
+3. docker compose run runner<br>
+4. rails db:create<br>
+5. rails db:migrate<br>
+6. rails db:seed<br>
+7. http://localhost:3000
+   にアクセス<br>
