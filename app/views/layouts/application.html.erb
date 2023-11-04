@@ -11,9 +11,11 @@
   </head>
 
   <body>
-    <%= link_to('ユーザ',   admin_users_path) %>
-    <%= link_to('ロール',   admin_roles_path) %>
-    <%= link_to('メニュー', admin_menus_path) %>
+    <%= link_to('クライアント', admin_clients_path) %>
+    <%= link_to('ユーザ',       admin_users_path) %>
+    <%= link_to('ロール',       admin_roles_path) %>
+    <%= link_to('メニュー',     admin_menus_path) %>
+    <%= link_to('記事',         service_articles_path) %>
     <%= yield %>
   </body>
 </html>

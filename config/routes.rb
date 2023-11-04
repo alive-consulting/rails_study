@@ -36,4 +36,7 @@ Rails.application.routes.draw do
     end
     resources :menus                                     # メニュー
   end
+  namespace :service do
+    resources :articles
+  end
 end

@@ -1,0 +1,77 @@
+<%= form_with model: [:service , @article], class: 'form-horizontal' do |f| %>
+  <!-- タイトル -->
+  <div class='form-group'>
+    <%= f.label :title, Article.human_attribute_name('title'), class: 'col-md-2 control-label' %>
+    <div class='col-md-7'>
+      <%= f.text_field :title, class: 'form-control', maxlength: 100, title: Article.human_attribute_name('title') %>
+      <div class="error_messages">
+        <% @article.errors[:title].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+  </div>
+  <!-- 公開日 -->
+  <div class='form-group'>
+    <%= f.label :publish_date, Article.human_attribute_name('publish_date'), class: 'col-md-2 control-label' %>
+    <div class='col-md-2'>
+      <%= f.text_field :publish_date, data: {controller: 'flatpickr'}, class: 'form-control date', maxlength: 10, title: Article.human_attribute_name('publish_date') %>
+            <span class='calendar'><i class='fas fa-calendar-alt'></i></span>
+      <div class="error_messages">
+        <% @article.errors[:publish_date].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+  </div>
+  <!-- 内容 -->
+  <div class='form-group'>
+    <%= f.label :content, Article.human_attribute_name('content'), class: 'col-md-2 control-label' %>
+    <div class='col-md-7' data-controller='tinymce'>
+      <%= f.text_area :content, data: { tinymce_target: 'area' }, title: Article.human_attribute_name('content')  %>
+      <div class="error_messages">
+        <% @article.errors[:content].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+  </div>
+  <!-- 削除 -->
+  <div class='form-group checkbox_label'>
+    <div class='col-md-1 checkbox'>
+      <%= f.check_box :is_delete, class: 'form-control', id: 'check_is_delete'+ @article.id.to_s %>
+      <label for= 'check_is_delete<%= @article.id %>' class='checkbox_style'></label>
+      <div class="error_messages">
+        <% @article.errors[:is_delete].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+    <%= f.label :is_delete, Article.human_attribute_name('is_delete'), class: 'col-md-2 control-label' %>
+  </div>
+  <!-- 確認 -->
+  <div class='form-group checkbox_label'>
+    <div class='col-md-1 checkbox'>
+      <%= f.check_box :is_confirmed, class: 'form-control', id: 'check_is_confirmed'+ @article.id.to_s %>
+      <label for= 'check_is_confirmed<%= @article.id %>' class='checkbox_style'></label>
+      <div class="error_messages">
+        <% @article.errors[:is_confirmed].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+    <%= f.label :is_confirmed, Article.human_attribute_name('is_confirmed'), class: 'col-md-2 control-label' %>
+  </div>
+  <!-- ユーザーID -->
+  <div class='form-group'>
+    <%= f.label :user_id, Article.human_attribute_name('user'), class: 'col-md-2 control-label' %>
+    <div class='col-md-3'>
+      <%= f.select(:user_id, options_from_collection_for_select(User.all, :id, :name, @article.user_id), {include_blank: true}, {class: 'form-control' }) %>
+      <span class='caret'><i class='fa fa-caret-down'></i></span>
+      <div class="error_messages">
+        <% @article.errors[:user_id].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class='form-group'>
+    <div class='col-md-3'>
+      <!-- 登録・更新ボタン -->
+      <%= submit_tag('更新') %>
+      <%#= button_to "削除", @user, method: :delete %>        
+      <!-- 戻るボタン -->
+      <%= link_to('戻る', service_articles_path ) %>
+    </div>
+  </div>
+
+<% end %>

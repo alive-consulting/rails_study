@@ -1,7 +1,4 @@
-<%= render 'shared/form', {
-      model: [:admin , @client],
-      back_path: admin_clients_path
-    } do |f| %>
+<%= form_with model: [:admin , @client], class: 'form-horizontal' do |f| %>
   <!-- 顧客名 -->
   <div class='form-group'>
     <%= f.label :name, Client.human_attribute_name('name'), class: 'col-md-2 control-label required' %>
@@ -12,4 +9,15 @@
       </div>
     </div>
   </div>
+
+  <div class='form-group'>
+    <div class='col-md-3'>
+      <!-- 登録・更新ボタン -->
+      <%= submit_tag('更新') %>
+      <%#= button_to "削除", @user, method: :delete %>        
+      <!-- 戻るボタン -->
+      <%= link_to('戻る', admin_clients_path ) %>
+    </div>
+  </div>
+
 <% end %>
