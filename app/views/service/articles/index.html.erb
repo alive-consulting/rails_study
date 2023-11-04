@@ -1,0 +1,83 @@
+<%= turbo_frame_tag 'main_pane' do %>
+  <!-- タイトル + 列表示非表示ボタン -->
+  <div class='h3_title'>
+    <h3><%= t('articles.index.title') %></h3>
+    <!-- 列の表示・非表示切り替えダイアログボタン -->
+    <%= index_dialog_button %>
+    <%= render 'shared/index_dialogs' %>
+  </div>
+  <!-- 一覧画面 -->
+  <%= turbo_frame_tag 'articles_list', target: 'main_pane' do %>
+    <div class='form-group'>
+      <!-- 新規登録ボタン -->
+      <%= new_button(new_service_article_path) %>
+      <!-- 件数 -->
+      <%= search_form_for [:service ,@q], html: {class: 'form-horizontal'} do |f| %>
+        <span class='count_details total'><b><%= link_to t('count_details.total')+number_with_delimiter(@total_count),
+            '?reset=true', data: {controller: 'index', action: 'click->index#reset'} %></b>
+        </span>
+        <div class='count_details unconfirmed_count'><%= link_to t('count_details.unconfirmed')+number_with_delimiter(@unconfirmed_count), '?utf8=?&q%5Bis_confirmed_not_eq%5D=true' %></div>
+      <% end %>
+      <!-- ページ送り -->
+      <div class='top-pagination'><%= paginate(@articles) %></div>
+    </div>
+    <div class='fixed_header_table' data-controller='index'>
+      <table id='table'>
+        <!-- 列見出し -->
+        <thead>
+          <tr>
+            <th><%= sort_link(@q, :title, Article.human_attribute_name(:title)) %></th>
+            <th><%= sort_link(@q, :publish_date, Article.human_attribute_name(:publish_date)) %></th>
+            <th><%= sort_link(@q, :content, Article.human_attribute_name(:content)) %></th>
+            <th><%= sort_link(@q, :is_delete, Article.human_attribute_name(:is_delete)) %></th>
+            <th><%= sort_link(@q, :is_confirmed, Article.human_attribute_name(:is_confirmed)) %></th>
+            <th><%= sort_link(@q, :user_id, Article.human_attribute_name(:user)) %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- データ表示部 + 対象カラム一覧 + 編集・削除ボタン -->
+          <% @articles.each do |article| %>
+            <!-- 削除用のdomid設定 -->
+            <tr id=<%="#{dom_id(article)}"%>>
+              <!-- タイトル -->
+              <td>
+                <%= article.title %>
+              </td>
+              <!-- 公開日 -->
+              <td>
+                <%= article.publish_date %>
+              </td>
+              <!-- 内容 -->
+              <td>
+                <%= article.content.blank? ? '' : article.content.to_s.slice(0,9) + '..' %>
+              </td>
+              <!-- 削除 -->
+              <td class='checked_item'>
+                <%= article.is_delete? ? '削除' : '' %>
+              </td>
+              <!-- 確認 -->
+              <td class='checked_item'>
+                <%= article.is_confirmed? ? '済' : '' %>
+              </td>
+              <!-- ユーザーID -->
+              <td>
+                <%= article.user&.name %>
+              </td>
+              <td>
+                <div style='display:flex'>
+                  <!-- 編集ボタン -->
+                  <%= edit_button(edit_service_article_path(article)) %>
+                  <!-- 削除ボタン -->
+                  <%= delete_dialog_button(article.id) %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <!-- 削除ダイアログ -->
+    <%= render 'shared/delete_dialogs', {models: @articles} %>
+  <% end %>
+<% end %>
