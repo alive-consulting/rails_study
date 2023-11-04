@@ -1,0 +1,24 @@
+<%= turbo_frame_tag 'main_pane' do %>
+  <!-- タイトル -->
+  <!-- 顧客 -->
+  <%= form_with url: users_admin_client_path, html: { data: {turbo_frame: 'children_items'}, class: 'form-horizontal', method: :get} do |f| %>
+    <div class='form-group'>
+      <%= f.label :client_id, Client.human_attribute_name('name'), class: 'col-md-2 control-label' %>
+      <div class='col-md-3'>
+        <%= f.select(:client_id, options_from_collection_for_select(Client.all, :id, :name, @client_id), {},
+              {class: 'form-control',
+                data: {
+                  controller:        'index',
+                  action:            'change->index#change_parent',
+                  'index-url-value': '/admin/clients/@id/users'
+                }
+              } ) %>
+          <span class='caret'><i class='fa fa-caret-down'></i></span>
+        </div>
+      </div>
+      <%= turbo_frame_tag 'children_items' do %>
+        <!-- ユーザー -->
+        <%= render 'admin/users/list', {url: nil} %>
+      <% end %>
+    <% end %>
+  <% end %>

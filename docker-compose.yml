@@ -1,0 +1,114 @@
+version: '3.4'
+
+x-app: &app
+  build:
+    context: .dockerdev
+    dockerfile: Dockerfile
+    args:
+      APP_DIR: '${APP_NAME}'
+      RUBY_VERSION: '3.2.2'
+      PG_MAJOR: '14'
+      NODE_MAJOR: '16'
+      YARN_VERSION: '1.22.19'
+      BUNDLER_VERSION: '2.4.13'
+  environment: &env
+    RUBY_YJIT_ENABLE: 1
+    NODE_ENV: ${NODE_ENV:-development}
+    RAILS_ENV: ${RAILS_ENV:-development}
+    YARN_CACHE_FOLDER: /${APP_NAME}/node_modules/.yarn-cache
+  image: ${APP_NAME}:1.0.0
+  tmpfs:      # 一時ファイルのパス(docker stopの都度、自動削除される)
+    - /tmp
+    - /${APP_NAME}/tmp/pids
+
+x-backend: &backend
+  <<: *app
+  stdin_open: true
+  tty: true
+  volumes:
+    - .:/${APP_NAME}:cached
+    - rails_cache:/${APP_NAME}/tmp/cache
+    - bundle:/bundle
+    - node_modules:/${APP_NAME}/node_modules
+    - .dockerdev/.psqlrc:/root/.psqlrc:ro
+    - .dockerdev/.bashrc:/root/.bashrc
+    - .dockerdev/.ssh:/root/.ssh
+    - .dockerdev/crontab:/etc/crontab
+  environment:
+    <<: *env
+    REDIS_URL: redis://redis:6379/
+    BOOTSNAP_CACHE_DIR: /bundle/bootsnap
+    WEB_CONCURRENCY: 0
+    HISTFILE: /${APP_NAME}/log/.bash_history
+    PSQL_HISTFILE: /${APP_NAME}/log/.psql_history
+    EDITOR: vi
+  depends_on:
+    - mariadb
+    - mailcatcher
+    - redis
+
+services:
+  runner:
+    <<: *backend
+    command: /bin/bash
+    ports:
+      - '3000:3000'
+      - '3002:3002'
+    hostname: runner
+
+  # Webコンテナ
+  rails:
+    <<: *backend
+    init: true    # Ctrl+Cで落とすと親プロセスに伝播してserver.pidが残らない
+    environment:
+      REDIS_URL: redis://redis:6379/
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'    
+    ports:                        # ポート番号
+      - '3000:3000'
+    hostname: rails_server             # ホスト名
+
+  # DB(Mariadb)コンテナ
+  mariadb:
+    image: mariadb:10.6.5
+    volumes:
+      - mariadb:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mariadb
+      TZ: Asia/Tokyo # TimeZone
+    ports:                        # ポート番号
+      - '3306:3306'
+    hostname: mariadb_server             # ホスト名
+
+  # MailCatcherコンテナ
+  mailcatcher:
+    image: dockage/mailcatcher
+    ports:                        # ポート番号
+      - '1080:1080'
+      - '1025:1025'
+    hostname: mailcatcher_server             # ホスト名
+
+  # Nodejsコンテナ
+  nodejs:
+    <<: *backend
+    working_dir: /${APP_NAME}/transport_server
+    command: yarn build:ts    # TypeScriptのコンパイル後、実行(package.json参照：node transport_server/js/app.js)
+    ports:                        # ポート番号
+      - '8080:8080'
+      - '8000:8000'
+    hostname: nodejs_server             # ホスト名
+
+  # Redisコンテナ
+  redis:
+    image: redis:6.2.5-alpine
+    volumes:
+      - redis:/data
+    ports:                        # ポート番号
+      - '6379:6379'
+    hostname: redis_server             # ホスト名
+
+volumes:
+  bundle:
+  rails_cache:
+  mariadb:
+  node_modules:
+  redis:

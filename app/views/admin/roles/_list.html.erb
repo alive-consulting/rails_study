@@ -1,0 +1,49 @@
+<h5><%= t('roles.index.title') %></h5>
+<div class='form-group'>
+  <div class='fixed_header_table' data-controller='index' style='height: 15vh'>
+    <table id='table'>
+      <!-- 列見出し -->
+      <thead>
+        <tr>
+          <th><%= Role.human_attribute_name(:name) %></th>
+          <th><%= Role.human_attribute_name(:explanation) %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- データ表示部 + 編集・削除ボタン -->
+        <% @roles.each do |role| %>
+          <!-- 削除用のdomid設定 -->
+          <tr id=<%="#{dom_id(role)}"%>>
+            <!-- 名前 -->
+            <td>
+              <% if url.nil? %>
+                <%= role.name %>
+              <% else %>
+                <%= link_to(role.name, "#{url}#{role.id}") %>
+              <% end %>
+            </td>
+            <!-- 説明 -->
+            <td>
+              <%= role.explanation.blank? ? '' : role.explanation.to_s.slice(0,9) + '..' %>
+            </td>
+            <td>
+              <div style='display:flex'>
+                <!-- 編集ボタン -->
+                <%= edit_button(edit_admin_role_path(role)) %>
+                <!-- 割当ボタン -->
+                <%= link_to edit_admin_role_role_menus_path(role), class: 'btn btn-outline-primary', data: {turbo_frame: 'main_pane'} do %>
+                  <%= icon_tag(:link) %>
+                <% end %>
+                <!-- 削除ボタン -->
+                <%= delete_dialog_button(role.id) %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <!-- 削除ダイアログ -->
+  <%= render 'shared/delete_dialogs', {models: @roles} %>
+</div>

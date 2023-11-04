@@ -1,0 +1,15 @@
+<%= render 'shared/form', {
+      model: [:admin , @client],
+      back_path: admin_clients_path
+    } do |f| %>
+  <!-- 顧客名 -->
+  <div class='form-group'>
+    <%= f.label :name, Client.human_attribute_name('name'), class: 'col-md-2 control-label required' %>
+    <div class='col-md-7'>
+      <%= f.text_field :name, class: 'form-control', maxlength: 20, title: Client.human_attribute_name('name') %>
+      <div class="error_messages">
+        <% @client.errors[:name].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

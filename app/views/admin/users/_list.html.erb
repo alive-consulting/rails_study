@@ -1,0 +1,63 @@
+<h5><%= t('users.index.title') %></h5>
+<div class='form-group'>
+  <div class='fixed_header_table' data-controller='index' style='height: 15vh'>
+    <table id='table'>
+      <!-- 列見出し -->
+      <thead>
+        <tr>
+          <th><%= User.human_attribute_name(:name) %></th>
+          <th><%= User.human_attribute_name(:client) %></th>
+          <th><%= User.human_attribute_name(:role) %></th>
+          <th><%= User.human_attribute_name(:is_deposit_prohibited) %></th>
+          <th><%= User.human_attribute_name(:locale) %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- データ表示部 + 編集・削除ボタン -->
+        <% @users.each do |user| %>
+          <!-- 削除用のdomid設定 -->
+          <tr id=<%="#{dom_id(user)}"%>>
+            <!-- 名前 -->
+            <td>
+              <% if url.nil? %>
+                <%= user.name %>
+              <% else %>
+                <%= link_to(user.name, "#{url}#{user.id}") %>
+              <% end %>
+            </td>
+            <!-- 顧客ID -->
+            <td>
+              <%= user.client&.name %>
+            </td>
+            <!-- ロールID -->
+            <td>
+              <%= user.role&.name %>
+            </td>
+            <!-- 入金禁止 -->
+            <td class='checked_item'>
+              <%= user.is_deposit_prohibited? ? '入金禁止' : '''' %>
+            </td>
+            <!-- ロケール -->
+            <td>
+              <%= locale_name(user.locale) %>
+            </td>
+            <td>
+              <div style='display:flex'>
+                <!-- 編集ボタン -->
+                <%= edit_button(edit_admin_user_path(user)) %>
+                <!-- 削除ボタン -->
+                <!-- ユーザーは自分自身とadminロールは消せない -->
+                <% unless session['user_id'] == user.id || user.role.name == 'admin' %>
+                  <%= delete_dialog_button(user.id) %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <!-- 削除ダイアログ -->
+  <%= render 'shared/delete_dialogs', {models: @users} %>
+</div>

@@ -1,0 +1,66 @@
+<%= form_with model: [:admin , @user], class: 'form-horizontal' do |f| %>
+  <!-- 名前 -->
+  <div class='form-group'>
+    <%= f.label :name, User.human_attribute_name('name'), class: 'col-md-2 control-label' %>
+    <div class='col-md-7'>
+      <%= f.text_field :name, class: 'form-control', maxlength: 20, title: User.human_attribute_name('name') %>
+      <div class="error_messages">
+        <% @user.errors[:name].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+  </div>
+  <!-- 顧客ID -->
+  <div class='form-group'>
+    <%= f.label :client_id, User.human_attribute_name('client'), class: 'col-md-2 control-label' %>
+    <div class='col-md-5'>
+      <%= f.select(:client_id, options_from_collection_for_select(Client.all, :id, :name, @user.client_id), {include_blank: true}, {class: 'form-control' }) %>
+      <span class='caret'><i class='fa fa-caret-down'></i></span>
+      <div class="error_messages">
+        <% @user.errors[:client_id].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+  </div>
+  <!-- ロールID -->
+  <div class='form-group'>
+    <%= f.label :role_id, User.human_attribute_name('role'), class: 'col-md-2 control-label' %>
+    <div class='col-md-5'>
+      <%= f.select(:role_id, options_from_collection_for_select(Role.all, :id, :name, @user.role_id), {include_blank: true}, {class: 'form-control' }) %>
+      <span class='caret'><i class='fa fa-caret-down'></i></span>
+      <div class="error_messages">
+        <% @user.errors[:role_id].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+  </div>
+  <!-- 入金禁止 -->
+  <div class='form-group checkbox_label'>
+    <div class='col-md-1 checkbox'>
+      <%= f.check_box :is_deposit_prohibited, class: 'form-control', id: 'check_is_deposit_prohibited'+ @user.id.to_s %>
+      <label for= 'check_is_deposit_prohibited<%= @user.id %>' class='checkbox_style'></label>
+      <div class="error_messages">
+        <% @user.errors[:is_deposit_prohibited].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+    <%= f.label :is_deposit_prohibited, User.human_attribute_name('is_deposit_prohibited'), class: 'col-md-2 control-label' %>
+  </div>
+  <!-- ロケール -->
+  <div class='form-group'>
+    <%= f.label :locale, User.human_attribute_name('locale'), class: 'col-md-2 control-label' %>
+    <div class='col-md-5'>
+      <%= f.select(:locale, {'日本語'=>'ja','英語'=>'en'}, {}, {class: 'form-control' }) %>
+      <span class='caret'><i class='fa fa-caret-down'></i></span>
+      <div class="error_messages">
+        <% @user.errors[:locale].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class='form-group'>
+    <div class='col-md-3'>
+      <!-- 登録・更新ボタン -->
+      <%= submit_tag('更新') %>
+      <%#= button_to "削除", @user, method: :delete %>        
+      <!-- 戻るボタン -->
+      <%= link_to('戻る', admin_users_path ) %>
+    </div>
+  </div>
+<% end %>

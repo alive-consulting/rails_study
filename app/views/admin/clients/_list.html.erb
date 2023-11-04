@@ -1,0 +1,40 @@
+<h5><%= t('clients.index.title') %></h5>
+<div class='form-group'>
+  <div class='fixed_header_table' data-controller='index' style='height: 15vh'>
+    <table id='table'>
+      <!-- 列見出し -->
+      <thead>
+        <tr>
+          <th><%= Client.human_attribute_name(:name) %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- データ表示部 + 編集・削除ボタン -->
+        <% @clients.each do |client| %>
+          <!-- 削除用のdomid設定 -->
+          <tr id=<%="#{dom_id(client)}"%>>
+            <!-- 顧客名 -->
+            <td>
+              <% if url.nil? %>
+                <%= client.name %>
+              <% else %>
+                <%= link_to(client.name, "#{url}#{client.id}") %>
+              <% end %>
+            </td>
+            <td>
+              <div style='display:flex'>
+                <!-- 編集ボタン -->
+                <%= edit_button(edit_admin_client_path(client)) %>
+                <!-- 削除ボタン -->
+                <%= delete_dialog_button(client.id) %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <!-- 削除ダイアログ -->
+  <%= render 'shared/delete_dialogs', {models: @clients} %>
+</div>

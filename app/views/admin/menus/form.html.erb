@@ -1,0 +1,85 @@
+<%= form_with model: [:admin , @menu], class: 'form-horizontal' do |f| %>
+  <!-- 親ID -->
+  <div class='form-group'>
+    <%= f.label :parent_id, Menu.human_attribute_name('parent_id'), class: 'col-md-2 control-label' %>
+    <div class='col-md-1'>
+      <%= f.number_field :parent_id, class: 'form-control number', maxlength: 8, title: Menu.human_attribute_name('parent_id') %>
+      <div class="error_messages">
+        <% @menu.errors[:parent_id].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+  </div>
+  <!-- 子ID -->
+  <div class='form-group'>
+    <%= f.label :child_id, Menu.human_attribute_name('child_id'), class: 'col-md-2 control-label' %>
+    <div class='col-md-1'>
+      <%= f.number_field :child_id, class: 'form-control number', maxlength: 8, title: Menu.human_attribute_name('child_id') %>
+      <div class="error_messages">
+        <% @menu.errors[:child_id].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+  </div>
+  <!-- 論理名 -->
+  <div class='form-group'>
+    <%= f.label :logical_name, Menu.human_attribute_name('logical_name'), class: 'col-md-2 control-label' %>
+    <div class='col-md-7'>
+      <%= f.text_field :logical_name, class: 'form-control', maxlength: 100, title: Menu.human_attribute_name('logical_name') %>
+      <div class="error_messages">
+        <% @menu.errors[:logical_name].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+  </div>
+  <!-- 物理名 -->
+  <div class='form-group'>
+    <%= f.label :physical_name, Menu.human_attribute_name('physical_name'), class: 'col-md-2 control-label' %>
+    <div class='col-md-7'>
+      <%= f.text_field :physical_name, class: 'form-control', maxlength: 100, title: Menu.human_attribute_name('physical_name') %>
+      <div class="error_messages">
+        <% @menu.errors[:physical_name].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+  </div>
+  <!-- URL -->
+  <div class='form-group'>
+    <%= f.label :url, Menu.human_attribute_name('url'), class: 'col-md-2 control-label' %>
+    <div class='col-md-7'>
+      <%= f.text_field :url, class: 'form-control', maxlength: 100, title: Menu.human_attribute_name('url') %>
+      <div class="error_messages">
+        <% @menu.errors[:url].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+  </div>
+  <!-- 表示順 -->
+  <div class='form-group'>
+    <%= f.label :display_order, Menu.human_attribute_name('display_order'), class: 'col-md-2 control-label' %>
+    <div class='col-md-1'>
+      <%= f.number_field :display_order, class: 'form-control number', maxlength: 8, title: Menu.human_attribute_name('display_order') %>
+      <div class="error_messages">
+        <% @menu.errors[:display_order].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+  </div>
+  <!-- メニュー表示 -->
+  <div class='form-group' style='display: flex;'>
+    <div class='col-md-1 col-xs-1 cell switch_area'>
+      <%= f.check_box :is_show, class: 'form-control', id: 'check_is_show'+ @menu.id.to_s %>
+      <label for= 'check_is_show<%= @menu.id %>'><span></span></label>
+      <div class='switch_shape'></div>
+      <div class="error_messages">
+        <% @menu.errors[:is_show].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+    <%= f.label :is_show, Menu.human_attribute_name('is_show'), class: 'col-md-2 control-label' %>
+  </div>
+
+  <div class='form-group'>
+    <div class='col-md-3'>
+      <!-- 登録・更新ボタン -->
+      <%= submit_tag('更新') %>
+      <%#= button_to "削除", @menu, method: :delete %>        
+      <!-- 戻るボタン -->
+      <%= link_to('戻る', admin_menus_path ) %>
+    </div>
+  </div>
+
+<% end %>

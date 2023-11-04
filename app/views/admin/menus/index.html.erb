@@ -1,0 +1,74 @@
+<%= turbo_frame_tag 'main_pane' do %>
+  <!-- タイトル + 列表示非表示ボタン -->
+  <div class='h3_title'>
+    <h3><%= t('menus.index.title') %></h3>
+  </div>
+  <!-- 一覧画面 -->
+  <div class='form-group'>
+    <!-- 新規登録ボタン -->
+    <%=
+      link_to(new_admin_menu_path, class: 'btn btn-outline-primary btn-new') do
+        icon_tag(:plus) + t('button.new')
+      end
+    %>
+  </div>
+  <div class='fixed_header_table' data-controller='index'>
+    <table id='table'>
+      <!-- 列見出し -->
+      <thead>
+        <tr>
+          <th><%= Menu.human_attribute_name(:parent_id) %></th>
+          <th><%= Menu.human_attribute_name(:child_id) %></th>
+          <th><%= Menu.human_attribute_name(:logical_name) %></th>
+          <th><%= Menu.human_attribute_name(:physical_name) %></th>
+          <th><%= Menu.human_attribute_name(:url) %></th>
+          <th><%= Menu.human_attribute_name(:display_order) %></th>
+          <th><%= Menu.human_attribute_name(:is_show) %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- データ表示部 + 対象カラム一覧 + 編集・削除ボタン -->
+        <% @menus.each do |menu| %>
+          <tr>
+            <!-- 親ID -->
+            <td>
+              <%= number_with_delimiter(menu.parent_id) %>
+            </td>
+            <!-- 子ID -->
+            <td>
+              <%= number_with_delimiter(menu.child_id) %>
+            </td>
+            <!-- 論理名 -->
+            <td>
+              <%= menu.logical_name %>
+            </td>
+            <!-- 物理名 -->
+            <td>
+              <%= menu.physical_name %>
+            </td>
+            <!-- URL -->
+            <td>
+              <%= link_to menu.url, menu.url, target: '_blank' %>
+            </td>
+            <!-- 表示順 -->
+            <td>
+              <%= number_with_delimiter(menu.display_order) %>
+            </td>
+            <!-- メニュー表示 -->
+            <td class='checked_item'>
+              <%= menu.is_show? ? '' : '非表示' %>
+            </td>
+            <td>
+              <div style='display:flex'>
+                <!-- 編集ボタン -->
+                <%= link_to('編集', edit_admin_menu_path(menu)) %>
+                <%#= link_to('削除', admin_menu_path(menu.id),  data: { turbo_method: :delete }) %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

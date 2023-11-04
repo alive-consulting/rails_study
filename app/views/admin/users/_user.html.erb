@@ -1,0 +1,66 @@
+<%= form_with(model: [:admin, user], id: "#{dom_id(user)}", local: true, html: {class: 'row mb-2'}) do |f| %>
+  <!-- 名前 -->
+  <div class='col-md-1 col-xs-1 cell'>
+    <%= f.text_field :name, maxlength: 20, class: 'form-control #{invalid_class}' %>
+    <div class="error_messages">
+      <% user.errors[:name].each do |error| %><%= error %><br><% end %>
+    </div>
+  </div>
+  <!-- 顧客ID -->
+  <div class='col-md-1 col-xs-1 cell'>
+    <%= f.select(:client_id, options_from_collection_for_select(Client.all, :id, :name, user.client_id), {include_blank: true}, {class: 'form-control' }) %>
+    <span class='caret'><i class='fa fa-caret-down'></i></span>
+    <div class="error_messages">
+      <% user.errors[:client_id].each do |error| %><%= error %><br><% end %>
+    </div>
+  </div>
+  <!-- アカウントID -->
+  <!-- ロールID -->
+  <div class='col-md-1 col-xs-1 cell'>
+    <%= f.select(:role_id, options_from_collection_for_select(Role.all, :id, :name, user.role_id), {include_blank: true}, {class: 'form-control' }) %>
+    <span class='caret'><i class='fa fa-caret-down'></i></span>
+    <div class="error_messages">
+      <% user.errors[:role_id].each do |error| %><%= error %><br><% end %>
+    </div>
+  </div>
+  <!-- 部店コード -->
+  <div class='col-md-1 col-xs-1 cell'>
+    <%= f.text_field :branch_code, maxlength: 4, class: 'form-control #{invalid_class}' %>
+    <div class="error_messages">
+      <% user.errors[:branch_code].each do |error| %><%= error %><br><% end %>
+    </div>
+  </div>
+  <!-- 顧客コード -->
+  <div class='col-md-1 col-xs-1 cell'>
+    <%= f.text_field :account_code, maxlength: 7, class: 'form-control #{invalid_class}' %>
+    <div class="error_messages">
+      <% user.errors[:account_code].each do |error| %><%= error %><br><% end %>
+    </div>
+  </div>
+  <!-- 入金禁止 -->
+  <div class='col-md-1 col-xs-1 cell table_checkbox'>
+    <%= f.check_box :is_deposit_prohibited, class: 'form-control', id: 'check_is_deposit_prohibited'+ user.id.to_s %>
+    <label for= 'check_is_deposit_prohibited<%= user.id %>' class='checkbox_style'></label>
+    <div class="error_messages">
+      <% user.errors[:is_deposit_prohibited].each do |error| %><%= error %><br><% end %>
+    </div>
+  </div>
+  <!-- ロケール -->
+  <div class='col-md-1 col-xs-1 cell'>
+    <%= f.select(:locale, locale_list, {}, {class: 'form-control' }) %>
+    <span class='caret'><i class='fa fa-caret-down'></i></span>
+    <div class="error_messages">
+      <% user.errors[:locale].each do |error| %><%= error %><br><% end %>
+    </div>
+  </div>
+  <!-- 編集ボタン -->
+  <div class='col-md-1 col-xs-1 cell header_table_button'>
+    <%= button_tag type: :submit, class: 'btn btn-outline-primary' do %>
+      <i class='fa fa-edit'></i>
+    <% end %>
+  </div>
+  <!-- 削除ボタン -->
+  <div class='col-md-1 col-xs-1 cell header_table_button'>
+    <%= delete_dialog_button(user.id) %>
+  </div>
+<% end %>

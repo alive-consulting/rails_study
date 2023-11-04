@@ -1,0 +1,52 @@
+<%= turbo_frame_tag 'main_pane' do %>
+  <!-- タイトル + 列表示非表示ボタン -->
+  <div class='h3_title'>
+    <h3><%= t('roles.index.title') %></h3>
+  </div>
+  
+  <!-- 一覧画面 -->
+  <div class='form-group'>
+    <!-- 新規登録ボタン -->
+    <%= 
+      link_to(new_admin_role_path, class: 'btn btn-outline-primary btn-new') do
+        icon_tag(:plus) + t('button.new')
+      end
+    %>    
+  </div>
+
+  <div class='fixed_header_table' data-controller='index'>
+    <table id='table'>
+      <!-- 列見出し -->
+      <thead>
+        <tr>
+          <th><%= Role.human_attribute_name(:name) %></th>
+          <th><%= Role.human_attribute_name(:explanation) %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- データ表示部 + 対象カラム一覧 + 編集・削除ボタン -->
+        <% @roles.each do |role| %>
+          <tr>
+            <!-- 名前 -->
+            <td>
+              <%= role.name %>
+            </td>
+            <!-- 説明 -->            
+            <td>
+              <%= role.explanation %>
+            </td>
+            <td>
+              <div style='display:flex'>
+                <!-- 編集ボタン -->
+                <%= link_to('編集', edit_admin_role_path(role)) %>
+                <%#= link_to('削除', admin_role_path(role.id),  data: { turbo_method: :delete }) %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+<% end %>

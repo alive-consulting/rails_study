@@ -1,0 +1,32 @@
+<%= form_with model: [:admin , @role], class: 'form-horizontal' do |f| %>
+  <!-- 名前 -->
+  <div class='form-group'>
+    <%= f.label :name, Role.human_attribute_name('name'), class: 'col-md-2 control-label required' %>
+    <div class='col-md-7'>
+      <%= f.text_field :name, class: 'form-control', maxlength: 20, title: Role.human_attribute_name('name') %>
+      <div class="error_messages">
+        <% @role.errors[:name].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+  </div>
+  <!-- 説明 -->
+  <div class='form-group'>
+    <%= f.label :explanation, Role.human_attribute_name('explanation'), class: 'col-md-2 control-label' %>
+    <div class='col-md-7'>
+      <%= f.text_area :explanation, class: 'lined', title: Role.human_attribute_name('explanation') %>
+      <div class="error_messages">
+        <% @role.errors[:explanation].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class='form-group'>
+    <div class='col-md-3'>
+      <!-- 登録・更新ボタン -->
+      <%= submit_tag('更新') %>
+      <%#= button_to "削除", @user, method: :delete %>        
+      <!-- 戻るボタン -->
+      <%= link_to('戻る', admin_roles_path ) %>
+    </div>
+  </div>
+<% end %>

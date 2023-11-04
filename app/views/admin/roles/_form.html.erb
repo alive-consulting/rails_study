@@ -1,0 +1,42 @@
+<%= turbo_frame_tag dom_id(role) do %>
+  <%= form_with(model: [:admin, role], id: "#{dom_id(role)}", local: true, html: {class: 'row mb-2'}) do |f| %>
+    <!-- 名前 -->
+    <div class='col-md-1 col-xs-1 cell'>
+      <%= f.text_field :name, maxlength: 20, class: 'form-control #{invalid_class}' %>
+      <div class="error_messages">
+        <% role.errors[:name].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+
+    <!-- 説明 -->
+    <div class='col-md-1 col-xs-1 cell'>
+      <%= f.text_field :explanation, class: 'form-control #{invalid_class}' %>
+      <div class="error_messages">
+        <% role.errors[:explanation].each do |error| %><%= error %><br><% end %>
+      </div>
+    </div>
+
+
+    <div class='col-md-1 col-xs-1 cell'>
+      <%= link_to t('users.index.title'), users_admin_role_path(role.id), data: {turbo_frame: 'main_pane'} %>
+    </div>
+
+    <!-- 編集ボタン -->
+    <div class='col-md-1 col-xs-1 cell header_table_button'>
+      <%= button_tag type: :submit, class: 'btn btn-outline-primary' do %>
+        <i class='fa fa-edit'></i>
+      <% end %>
+    </div>
+
+    <div class='col-md-1 col-xs-1 cell header_table_button'>
+      <%= link_to edit_admin_role_role_menus_path(role), class: 'btn btn-outline-primary' do %>
+        <%= icon_tag(:link) %>
+      <% end %>
+    </div>
+
+    <!-- 削除ボタン -->
+    <div class='col-md-1 col-xs-1 cell header_table_button'>
+      <%= delete_dialog_button(role.id) %>
+    </div>
+  <% end %>
+<% end %>

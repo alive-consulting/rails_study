@@ -1,0 +1,62 @@
+<%= turbo_frame_tag 'main_pane' do %>
+  <!-- roleとmenuの割当画面 -->
+  <h3><%= t('activerecord.models.role_menus') %></h3>
+  
+  <!-- ロール -->
+  <span class='form-group'><%= t('activerecord.models.role') %></span>
+  <div class='form-group display_field'><%= @role.name %></div>
+  
+  <%= form_with model: [:admin , @role],
+                  url: admin_role_role_menus_path(@role),
+                  local: true, class: 'form-horizontal' do |f| %>
+    <!-- ボタン（更新・戻る） -->
+    <div class='form-group'>
+      <%= button_tag type: :submit, class: 'btn btn-outline-primary' do %>
+        <i class='fa fa-edit'></i><%= t('button.update') %>
+      <% end %>
+      <%= link_to admin_roles_path, class: 'btn btn-outline-warning' do %>
+        <%= icon_tag(:reply) %><%= t('button.back') %>
+      <% end %>
+    </div>
+    
+    <!-- 選択画面 -->
+    <% @role_menus.each do |role_menu| %>
+      
+      <!-- 親IDの場合はメニュー名のみ表示 -->
+      <% if role_menu.parent_id.nil? %>
+        <!-- メニュー名 -->
+        <div class='col-md-3 col-xs-3 cell parent_nn_item'>
+          <label class='contents_label'><%= Menu.find(role_menu.menu_id).logical_name %></label>
+        </div>
+        <!-- 子IDの場合はメニュー名＋スイッチ表示 -->
+      <% else %>
+        <div class='child_nn_item'>
+          <!-- スイッチ本体 -->
+          <div class='col-md-1 col-xs-1 cell switch_area'>
+            <%= f.check_box "#{role_menu.menu_id}",
+                 {checked: !!role_menu.role_menus_id,
+                 class: 'form-control',
+                 id:    'check_is_' + role_menu.menu_id.to_s} %>
+              <label for='check_is_<%= role_menu.menu_id.to_s %>'><span></span></label>
+              <div class='switch_shape'></div>
+            </div>
+            <!-- メニュー名 -->
+            <div class='col-md-3 col-xs-3 cell'>
+              <label class='contents_label'><%= Menu.find(role_menu.menu_id).logical_name %></label>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+
+      <!-- ボタン（更新・戻る） -->
+      <div class='form-group'>
+        <%= button_tag type: :submit, class: 'btn btn-outline-primary' do %>
+          <i class='fa fa-edit'></i><%= t('button.update') %>
+        <% end %>
+        <%= link_to admin_roles_path, class: 'btn btn-outline-warning' do %>
+          <%= icon_tag(:reply) %><%= t('button.back') %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

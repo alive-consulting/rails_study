@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RailsStudy</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= javascript_importmap_tags %>    
+    <%#= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <%= link_to('ユーザ',   admin_users_path) %>
+    <%= link_to('ロール',   admin_roles_path) %>
+    <%= link_to('メニュー', admin_menus_path) %>
+    <%= yield %>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+<%= turbo_frame_tag 'main_pane' do %>
+  <!-- タイトル -->
+  <!-- ロール -->
+  <%= form_with url: users_admin_role_path, html: { data: {turbo_frame: 'children_items'}, class: 'form-horizontal', method: :get} do |f| %>
+    <div class='form-group'>
+      <%= f.label :role_id, Role.human_attribute_name('name'), class: 'col-md-2 control-label' %>
+      <div class='col-md-3'>
+        <%= f.select(:role_id, options_from_collection_for_select(Role.all, :id, :name, @role_id), {},
+              {class: 'form-control',
+                data: {
+                  controller:        'index',
+                  action:            'change->index#change_parent',
+                  'index-url-value': '/admin/roles/@id/users'
+                }
+              } ) %>
+          <span class='caret'><i class='fa fa-caret-down'></i></span>
+        </div>
+      </div>
+      <%= turbo_frame_tag 'children_items' do %>
+        <!-- ユーザー -->
+        <%= render 'admin/users/list', {url: nil} %>
+      <% end %>
+    <% end %>
+  <% end %>
